@@ -4,6 +4,6 @@ appproject:
   - docker:dind
  script:
   - env
-  - echo glpat-5NyEyKXjGByjg1E6gYux | docker login -u tgpham26 registry.gitlab.com --password-stdin
+  - echo glpat-w-LK6RG_zPMSo6cL9b6S | docker login -u tgpham26 registry.gitlab.com --password-stdin
   - docker build -t registry.gitlab.com/tgpham26/pnhappproject .
   - docker push registry.gitlab.com/tgpham26/pnhappproject
