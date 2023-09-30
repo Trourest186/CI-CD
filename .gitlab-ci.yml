@@ -1,101 +1,50 @@
-# image: docker
-# services:
-#   - docker:dind
-# stages:
-#   - build
-#   - deploy
-# build:
-#   stage: build
-#   script:
-#     - env
-#     - echo glpat-zsGfLs9LNS_bJuL4Jnj4 | docker login -u tgpham26 registry.gitlab.com --password-stdin
-#     - pwd && ls -la
-#     - docker build -t registry.gitlab.com/tgpham26/pnhappproject .
-#     - docker push registry.gitlab.com/tgpham26/pnhappproject
-# deploy:
-#   stage: deploy
-#   script:
-#     - eval $(ssh-agent -s)
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
-#     - ssh-keyscan -H $SSH_SERVER_IP_TEST >> ~/.ssh/known_hosts
-#     - chmod 600 ~/.ssh/known_hosts
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
-#     - pwd && ls -la
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
-#     - scp docker-compose.yml ubuntu@${SSH_SERVER_IP_TEST}:/home/ubuntu/
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "pwd && ls -la"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker-compose down"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo sleep 60"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker image prune -a --force"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo 'sudo docker-compose up -d' | bash -s &"
 image: docker
 services:
   - docker:dind
 stages:
-  # - build-dev
-  # - deploy-dev
+  - build-dev
+  - deploy-dev
   - build-production
   - deploy-production
 
-# build-dev:
-#   stage: build-dev
-#   rules:
-#     - if: '$CI_COMMIT_BRANCH == "dev"'
-#     - if: $CI_COMMIT_TAG
-#       when: never
-#   script:
-#     - echo $HOSTNAME
-#     - echo $CI_REGISTRY_USER $CI_REGISTRY $CI_REGISTRY_PASSWORD 
-#     - env
-#     - echo glpat-zsGfLs9LNS_bJuL4Jnj4 | docker login -u tgpham26 registry.gitlab.com --password-stdin
-#     - pwd && ls -la
-#     - docker build -t registry.gitlab.com/tgpham26/pnhappproject .
-#     - docker push registry.gitlab.com/tgpham26/pnhappproject
+build-dev:
+  stage: build-dev
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: $CI_COMMIT_TAG
+      when: never
+  script:
+    - echo $HOSTNAME
+    - echo $CI_REGISTRY_USER $CI_REGISTRY $CI_REGISTRY_PASSWORD 
+    - env
+    - echo glpat-zsGfLs9LNS_bJuL4Jnj4 | docker login -u tgpham26 registry.gitlab.com --password-stdin
+    - pwd && ls -la
+    - docker build -t registry.gitlab.com/tgpham26/pnhappproject .
+    - docker push registry.gitlab.com/tgpham26/pnhappproject
 
-# deploy-dev:
-#   stage: deploy-dev
-#   needs: [build-dev]
-#   rules:
-#     - if: '$CI_COMMIT_BRANCH == "dev"'
-#     - if: $CI_COMMIT_TAG
-#       when: never
-#   script:
-#     - eval $(ssh-agent -s)
-#     # - mkdir -p ~/.ssh
-#     # - chmod 700 ~/.ssh
-#     # - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
-#     # - ssh-keyscan -H $SSH_SERVER_IP_TEST >> ~/.ssh/known_hosts
-#     # - chmod 600 ~/.ssh/known_hosts
-#     # - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
-#     # - pwd && ls -la
-#     # - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
-#     # - scp docker-compose.yml ubuntu@${SSH_SERVER_IP_TEST}:/home/ubuntu/
-#     # - ssh ${USER_SSH}@${SSH_SERVER_IP_TEST} "sed -i 's,'___IMAGE___',"$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG",' docker-compose.yml"
-#     # - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "pwd && ls -la"
-#     # - ssh ${USER_SSH}@${SSH_SERVER_IP_TEST} "docker stack deploy --compose-file docker-compose.yml $DOCKER_SWARM_NAME"
-#     # # - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker-compose down"
-#     # # - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo sleep 60"
-#     # # - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker image prune -a --force"
-#     # # - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo 'sudo docker-compose up -d' | bash -s &"
-#     # - ssh ${USER_SSH}@${SSH_SERVER_IP_TEST} "docker container prune -f"
-#     # - ssh ${USER_SSH}@${SSH_SERVER_IP_TEST} "docker image prune -f"
-#     #     - eval $(ssh-agent -s)
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
-#     - ssh-keyscan -H $SSH_SERVER_IP_TEST >> ~/.ssh/known_hosts
-#     - chmod 600 ~/.ssh/known_hosts
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
-#     - pwd && ls -la
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
-#     - scp docker-compose.yml ubuntu@${SSH_SERVER_IP_TEST}:/home/ubuntu/
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "pwd && ls -la"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker-compose down"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo sleep 60"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker image prune -a --force"
-#     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo 'sudo docker-compose up -d' | bash -s &"
+deploy-dev:
+  stage: deploy-dev
+  needs: [build-dev]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: $CI_COMMIT_TAG
+      when: never
+  script:
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
+    - ssh-keyscan -H $SSH_SERVER_IP_TEST >> ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
+    - pwd && ls -la
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
+    - scp docker-compose.yml ubuntu@${SSH_SERVER_IP_TEST}:/home/ubuntu/
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "pwd && ls -la"
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker-compose down"
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo sleep 60"
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker image prune -a --force"
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo 'sudo TAG="lastest" docker-compose up -d' | bash -s &"
 
 build-production:
   stage: build-production
@@ -109,8 +58,6 @@ build-production:
     - echo $CI_REGISTRY_USER $CI_REGISTRY $CI_REGISTRY_PASSWORD
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker --version
-    # - docker build -t registry.gitlab.com/tgpham26/pnhappproject .
-    # - docker push registry.gitlab.com/tgpham26/pnhappproject
     - docker build -t registry.gitlab.com/tgpham26/pnhappproject:$CI_COMMIT_TAG .
     - docker push registry.gitlab.com/tgpham26/pnhappproject:$CI_COMMIT_TAG
 
@@ -123,20 +70,6 @@ deploy-production:
         - master
   script:
     - eval $(ssh-agent -s)
-    # - mkdir -p ~/.ssh
-    # - chmod 700 ~/.ssh
-    # - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
-    # - ssh-keyscan -H $SSH_SERVER_IP_PROD >> ~/.ssh/known_hosts
-    # - chmod 600 ~/.ssh/known_hosts
-    # - ssh ${SSH_USER}@${SSH_SERVER_IP_PROD} "echo glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
-    # - pwd && ls -la
-    # - ssh ${SSH_USER}@${SSH_SERVER_IP_PROD} "rm -rf docker-compose.yml"
-    # - scp docker-compose.yml ubuntu@${SSH_SERVER_IP_PROD}:/home/ubuntu/
-    # - ssh ${USER_SSH}@${SSH_SERVER_IP_PROD} "sed -i 's,'___IMAGE___',"$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG",' docker-compose.yml"
-    # - ssh ${SSH_USER}@${SSH_SERVER_IP_PROD} "pwd && ls -la"
-    # - ssh ${USER_SSH}@${SSH_SERVER_IP_PROD} "docker stack deploy --compose-file docker-compose.yml $DOCKER_SWARM_NAME"
-    # - ssh ${USER_SSH}@${SSH_SERVER_IP_PROD} "docker container prune -f"
-    # - ssh ${USER_SSH}@${SSH_SERVER_IP_PROD} "docker image prune -f"
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
