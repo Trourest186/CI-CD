@@ -23,6 +23,7 @@ deploy:
     - chmod 600 ~/.ssh/known_hosts
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
     - pwd && ls -la
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker image prune -a --force"
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
     - scp docker-compose.yml ubuntu@${SSH_SERVER_IP_TEST}:/home/ubuntu/
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "pwd && ls -la"
