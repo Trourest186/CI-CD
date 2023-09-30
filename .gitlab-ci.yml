@@ -21,7 +21,7 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
     - ssh-keyscan -H $SSH_SERVER_IP_TEST >> ~/.ssh/known_hosts
     - chmod 600 ~/.ssh/known_hosts
-    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo glpat-zsGfLs9LNS_bJuL4Jnj4 | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
     - pwd && ls -la
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
     - scp docker-compose.yml ubuntu@SSH_SERVER_IP_TEST:/home/ubuntu/
