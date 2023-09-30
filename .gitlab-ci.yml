@@ -25,6 +25,7 @@ deploy:
     - pwd && ls -la
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker image prune -a --force"
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo sleep 60"
     - scp docker-compose.yml ubuntu@${SSH_SERVER_IP_TEST}:/home/ubuntu/
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "pwd && ls -la"
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker-compose down"
