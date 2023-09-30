@@ -10,8 +10,8 @@ build:
     - env
     - echo glpat-zsGfLs9LNS_bJuL4Jnj4 | docker login -u tgpham26 registry.gitlab.com --password-stdin
     - pwd && ls -la
-    - docker build -t registry.gitlab.com/duong20998abc/nodejsmysql . 
-    - docker push registry.gitlab.com/duong20998abc/nodejsmysql
+    - docker build -t registry.gitlab.com/tgpham26/pnhappproject . 
+    - docker push registry.gitlab.com/tgpham26/pnhappproject
 deploy:
   stage: deploy
   script:
