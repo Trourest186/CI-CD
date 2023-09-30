@@ -1,13 +1,18 @@
-appproject:
- image: docker
- services:
+image: docker
+services:
   - docker:dind
- script:
-  - env
-  - echo glpat-w-LK6RG_zPMSo6cL9b6S | docker login -u tgpham26 registry.gitlab.com --password-stdin
-  - docker build -t registry.gitlab.com/tgpham26/pnhappproject .
-  - docker push registry.gitlab.com/tgpham26/pnhappproject
- deploy:
+stages:
+  - build
+  - deploy
+build: 
+  stage: build
+  script:
+    - env
+    - echo glpat-w-LK6RG_zPMSo6cL9b6S | docker login -u tgpham26 registry.gitlab.com --password-stdin
+    - pwd && ls -la
+    - docker build -t registry.gitlab.com/duong20998abc/nodejsmysql . 
+    - docker push registry.gitlab.com/duong20998abc/nodejsmysql
+deploy:
   stage: deploy
   script:
     - eval $(ssh-agent -s)
@@ -16,10 +21,34 @@ appproject:
     - echo "$SSH_PRIVATE_KEY" | tr -d  '\r' | ssh-add -
     - ssh-keyscan -H $SSH_SERVER_IP_TEST >> ~/.ssh/known_hosts
     - chmod 600 ~/.ssh/known_hosts
-    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo glpat-w-LK6RG_zPMSo6cL9b6S | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
+    - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "glpat-w-LK6RG_zPMSo6cL9b6S | sudo docker login -u tgpham26 registry.gitlab.com --password-stdin"
     - pwd && ls -la
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "rm -rf docker-compose.yml"
     - scp docker-compose.yml ubuntu@SSH_SERVER_IP_TEST:/home/ubuntu/
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "pwd && ls -la"
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "sudo docker-compose down"
     - ssh ${SSH_USER}@${SSH_SERVER_IP_TEST} "echo 'sudo docker-compose up -d' | bash -s &"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
